@@ -18,20 +18,20 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $request->validate([
-            'email' => 'required|string|email',
+            'email' => 'required|email',
             'password' => 'required|string',
         ]);
         $credentials = $request->only('email', 'password');
         $token = Auth::attempt($credentials);
         
         if (!$token) {
-            return response()->json([
+            return ([
                 'message' => 'Unauthorized',
-            ], 401);
+            ]);
         }
 
         $customer = Auth::user();
-        return response()->json([
+        return ([
             'customer' => $customer,
             'authorization' => [
                 'token' => $token,
@@ -43,9 +43,9 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:customers',
-            'password' => 'required|string|min:6',
+            'name' => 'required',
+            'email' => 'required',
+            'password' => 'required',
             'phone_number' => 'required',
             'type' => 'required',
           
@@ -59,23 +59,23 @@ class AuthController extends Controller
             'phone_number'=>$request->phone_number
         ]);
 
-        return response()->json([
+        return ([
             'message' => 'customer created successfully',
-            'customer' => $customer
+            'customer' => $customer,
         ]);
     }
 
     public function logout()
     {
         Auth::logout();
-        return response()->json([
+        return ([
             'message' => 'Successfully logged out',
         ]);
     }
 
     public function refresh()
     {
-        return response()->json([
+        return ([
             'customer' => Auth::user(),
             'authorisation' => [
                 'token' => Auth::refresh(),

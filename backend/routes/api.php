@@ -19,13 +19,15 @@ use App\Http\Controllers\AuthController;
 */
 Route::post('/signin', [AuthController::class, 'signIn']);
 
-
-Route::controller(AuthController::class)->group(function () {
-  Route::post('login', 'login');
-  Route::post('register', 'register');
-  Route::post('logout', 'logout');
-  Route::post('refresh', 'refresh');
-  Route::apiResource("customers" , CustomerController::class);
-  Route::apiResource("products" , ProductController::class);
-  Route::apiResource("favorites" , FavoriteController::class);
+Route::middleware(['cors'])->group(function () {
+  Route::controller(AuthController::class)->group(function () {
+    Route::post('login', 'login');
+    Route::post('register', 'register');
+    Route::post('logout', 'logout');
+    Route::post('refresh', 'refresh');
+    Route::apiResource("customers" , CustomerController::class);
+    Route::apiResource("products" , ProductController::class);
+    Route::apiResource("favorites" , FavoriteController::class);
+  });
 });
+
